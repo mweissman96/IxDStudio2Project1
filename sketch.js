@@ -18,25 +18,24 @@ let roboto, playball;
 
 let hSlider, sSlider, bSlider;
 
-let darkmode;//   this will transform the background for darkmode
-let dark;   // if this is false, the background will be in day mode
-let lightbutton; // this is for the light theme switch image
+let bIsDark;         // if this is false, the background will be in day mode
+let darkModeImage; //   this will transform the background for darkmode
+let lightButtonImage; // this is for the light theme switch image
 
 function preload() {
   roboto = loadFont('assets/Roboto-Regular.ttf');
   playball = loadFont('assets/Playball-Regular.ttf');
 
-darkmode = loadImage('assets/darkmode.png');
-lightbutton = loadImage('assets/lightToggle.png');
+  darkModeImage = loadImage('assets/darkmode.png');
+  lightButtonImage = loadImage('assets/lightToggle.png');
 }
 
 function setup() {
   createCanvas(640,960);
   colorMode(HSB);
-  strokeColor = (0,0,12);
+  strokeColor = (0, 0.75);
   stroke(strokeColor); // the color of the outlines
   textAlign(CENTER);
-
 
 
   // starting values of the Current Color (HSB -- actually it should be noted that all colors are in HSB unless specifically converted otherwise, temporarily
@@ -63,7 +62,7 @@ function setup() {
   whatScreen = 0;
 
   backgroundColor = color(0,0,97);
-dark = true;  // this will start application in dark mode.
+  bIsDark = true;  // this will start application in dark mode.
 
   swatch1 = color(0, 0);
   swatch2 = color(0, 0);
@@ -87,6 +86,18 @@ dark = true;  // this will start application in dark mode.
 }
 
 function draw() {
+  // this is what actually changes, depending on whether it's dark mode or light mode
+  if (bIsDark == true) {
+    image(darkModeImage, 0, 0, 640, 960);
+    textColor = (0, 0, 90);
+    strokeColor = color(0, 0.75);
+    background(25,0.375)
+  } else {
+    background(backgroundColor);
+    textColor = (0, 0, 40);
+    strokeColor = color(0,0);
+  }
+
   if (whatScreen == 0) {
     introScreen();
   } else if (whatScreen == 1) {
@@ -100,27 +111,7 @@ function draw() {
 
 function introScreen() {
   // Background
-  if (mouseIsPressed && mouseX <465 && mouseX >540 && mouseY <730 && mouseY >800) {
-print('im pressing the light toggle');
-
-  if (dark == true) {
-    dark = false
-  }
-  else {
-    dark = true
-  }
-  }
-//  this   is where im having trouble REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-
-if (dark = true) {
-image(darkmode,0,0,640, 960)
-strokeColor = (0,0,52)
-
-}
-else {
-  fill(backgroundColor);
-}
-  image(lightbutton, 470,730,70,70);
+  image(lightButtonImage, 470,730,70,70);
 
   // rect(0,0,640,960);  this ruins the background fill image at startup
   textFont(playball);
@@ -205,13 +196,6 @@ else {
   fill(100);
   text('Explore', col2, 774);
   strokeWeight(3);
-
-
-
-
-
-
-
 }
 
 function suggestionScreen() {
@@ -219,17 +203,6 @@ function suggestionScreen() {
 }
 
 function exploreScreen() {
-  // Background
-  if (dark = true) {
-  image(darkmode,0,0,640, 960)
-
-
-  }
-  else {
-    fill(backgroundColor);
-      rect(0,0,640,960);
-  }
-
 
   textFont(roboto);
 
@@ -273,8 +246,9 @@ function exploreScreen() {
   fill(50);
   ellipse(30,30,40,40)
   strokeWeight(3);
-  fill(textColor);
+  fill(0,0,95);
   text('↩', 30, 37.5);
+  fill(textColor);
   textFont(roboto);
   textSize(16);
   if (alpha(swatch1) != 0) {
@@ -289,7 +263,7 @@ function exploreScreen() {
   if (alpha(swatch4) != 0) {
     text('#' + hex(round(red(swatch4)), 2) + hex(round(green(swatch4)), 2) + hex(round(blue(swatch4)), 2), midColB + 97, s34H + 40);
   }
-  strokeWeight(2);
+  strokeWeight(2.5);
   fill(swatch1);
   ellipse(midColB - 67, s12H - 8, 50, 50);
   fill(swatch2);
@@ -437,6 +411,14 @@ function shadow(column) {
 function mouseClicked() {
   if (whatScreen == 0) {
     // intro screen
+    if (dist(mouseX, mouseY, 505, 765) <= 35) {
+      if (bIsDark == true) {
+        bIsDark = false;
+      } else {
+        bIsDark = true;
+      }
+    }
+
     if (mouseX > col2 - 73.5 && mouseX < col2 + 73.5 && mouseY > 764 - 31 && mouseY < 764 + 31) {
       // run this when the user switches from intro to explore
       swatch1 = color(aH, aS, aB);
@@ -454,7 +436,7 @@ function mouseClicked() {
   } else if (whatScreen == 1) {
 
   } else {
-    if (dist(mouseX, mouseY, 30, 30,) <= 20) {
+    if (dist(mouseX, mouseY, 30, 30) <= 20) {
       // this code causes the user to keep his/her active color when returning to intro screen.  i realized though that people will probably prefer to return to their original color.
       //hSlider.value(aH);
       //sSlider.value(aS);
