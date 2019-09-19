@@ -18,10 +18,16 @@ let roboto, playball;
 
 let hSlider, sSlider, bSlider;
 
+let darkmode;//   this will transform the background for darkmode
+let dark;   // if this is false, the background will be in day mode
+let lightbutton; // this is for the light theme switch image
 
 function preload() {
   roboto = loadFont('assets/Roboto-Regular.ttf');
   playball = loadFont('assets/Playball-Regular.ttf');
+
+darkmode = loadImage('assets/darkmode.png');
+lightbutton = loadImage('assets/lightToggle.png');
 }
 
 function setup() {
@@ -30,6 +36,8 @@ function setup() {
   strokeColor = (0,0,12);
   stroke(strokeColor); // the color of the outlines
   textAlign(CENTER);
+
+
 
   // starting values of the Current Color (HSB -- actually it should be noted that all colors are in HSB unless specifically converted otherwise, temporarily
   aH = 0;
@@ -54,7 +62,8 @@ function setup() {
 
   whatScreen = 0;
 
-  backgroundColor = color(0,0,23);
+  backgroundColor = color(0,0,97);
+dark = true;  // this will start application in dark mode.
 
   swatch1 = color(0, 0);
   swatch2 = color(0, 0);
@@ -85,13 +94,35 @@ function draw() {
   } else {
     exploreScreen();
   }
+
 }
 
 
 function introScreen() {
   // Background
+  if (mouseIsPressed && mouseX <465 && mouseX >540 && mouseY <730 && mouseY >800) {
+print('im pressing the light toggle');
+
+  if (dark == true) {
+    dark = false
+  }
+  else {
+    dark = true
+  }
+  }
+//  this   is where im having trouble REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+
+if (dark = true) {
+image(darkmode,0,0,640, 960)
+strokeColor = (0,0,52)
+
+}
+else {
   fill(backgroundColor);
-  rect(0,0,640,960);
+}
+  image(lightbutton, 470,730,70,70);
+
+  // rect(0,0,640,960);  this ruins the background fill image at startup
   textFont(playball);
 
   strokeWeight(5);
@@ -121,7 +152,7 @@ function introScreen() {
   strokeWeight(1.8);
   textSize(12);
   text("© 2019 Nobody.  Content is property of the developers, although I think now it's", col2, 900);
-  text("technically property of the school?  I honestly don't know.  Sue me.  Wait don't--", col2, 920);
+  text("technically property of the school?  I honestly don't know.  ", col2, 920);
 
   aH = hSlider.value();
   aS = sSlider.value();
@@ -174,6 +205,13 @@ function introScreen() {
   fill(100);
   text('Explore', col2, 774);
   strokeWeight(3);
+
+
+
+
+
+
+
 }
 
 function suggestionScreen() {
@@ -182,8 +220,17 @@ function suggestionScreen() {
 
 function exploreScreen() {
   // Background
-  fill(backgroundColor);
-  rect(0,0,640,960);
+  if (dark = true) {
+  image(darkmode,0,0,640, 960)
+
+
+  }
+  else {
+    fill(backgroundColor);
+      rect(0,0,640,960);
+  }
+
+
   textFont(roboto);
 
   // title
