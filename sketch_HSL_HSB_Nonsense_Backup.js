@@ -16,7 +16,7 @@ let whatScreen; // what screen are we on?  0 = intro screen, 1 = suggestion scre
 
 let roboto, playball;
 
-let hSlider, sSlider, bSlider;
+let rSlider, gSlider, bSlider;
 
 
 function preload() {
@@ -64,17 +64,9 @@ function setup() {
   s12H = 174;
   s34H = 292;
 
-  hSlider = createSlider(0, 360, 180);
-  sSlider = createSlider(0, 100, 50);
-  bSlider = createSlider(0, 100, 50);
-
-  hSlider.position(col2 - 150, 522.5);
-  sSlider.position(col2 - 150, 582.5);
-  bSlider.position(col2 - 150, 642.5);
-
-  hSlider.size(300, 50);
-  sSlider.size(300, 50);
-  bSlider.size(300, 50);
+  rSlider = createSlider(0, 255, 255);
+  gSlider = createSlider(0, 255, 249);
+  bSlider = createSlider(0, 255, 255);
 }
 
 function draw() {
@@ -123,26 +115,18 @@ function introScreen() {
   text("© 2019 Nobody.  Content is property of the developers, although I think now it's", col2, 900);
   text("technically property of the school?  I honestly don't know.  Sue me.  Wait don't--", col2, 920);
 
-  aH = hSlider.value();
-  aS = sSlider.value();
-  aB = bSlider.value();
+  rSlider.position(col2 - 67, 550);
+  gSlider.position(col2 - 67, 625);
+  bSlider.position(col2 - 67, 700);
 
-  // Hue
-  strokeWeight(2);
-  for (var i = 0; i < 299; i++) {
-    stroke((i/299) * 360, 100, 100);
-    line(col2 - 147 + i, 520, col2 - 147 + i, 550);
-  }
-  for (var i = 0; i < 299; i++) {
-    stroke(aH, (i/299) * 100, 100);
-    line(col2 - 147 + i, 580, col2 - 147 + i, 610);
-  }
-  for (var i = 0; i < 299; i++) {
-    stroke(aH, aS, (i/299) * 100);
-    line(col2 - 147 + i, 640, col2 - 147 + i, 670);
-  }
-  strokeWeight(3);
-  stroke(strokeColor);
+  const r = rSlider.value();
+  const g = gSlider.value();
+  const b = bSlider.value();
+
+  let chosenHex = '#' + hex(round(red(swatch4)), 2) + hex(round(green(swatch4)), 2) + hex(round(blue(swatch4)));
+  aH = round(hue(chosenHex));
+  aS = round(saturation(chosenHex));
+  aB = round(brightness(chosenHex));
 
   // Your Color
   strokeWeight(5);
@@ -151,29 +135,36 @@ function introScreen() {
   fill(textColor);
   textSize(42);
   text('Your Color:', col2, 300);
-
-  strokeWeight(3);
+  // the actual color stuff
+  /*fill(aH,aS,aB);
+  ellipse((col1*2 + col2) / 3, 410, 150, 150);
+  ellipse((col3*2 + col2) / 3, 410, 150, 150);
   rectMode(CENTER);
-  rect(col2, 764, 150, 65);
-  rectMode(CORNER);
-
-  strokeWeight(2);
-  for (var i = 0; i < 63; i++) {
-    stroke(55 - 15 * (i / 63), 100, 90 - 10 * (i / 63));
-    line(col2 - 73.5, 764 - 31 + i, col2 + 73.5, 764 - 31 + i);
-  }
-  strokeWeight(3);
-  stroke(strokeColor);
-
-  textSize(30);
+  rect(col2, 410, ((col3*2 + col2) / 3) - ((col1*2 + col2) / 3), 150);
   strokeWeight(0);
-  fill(0, 0.15);
-  text('Explore', col2+2, 774+2);
-  text('Explore', col2+1, 774+1);
-  text('Explore', col2, 774);
-  fill(100);
-  text('Explore', col2, 774);
-  strokeWeight(3);
+  ellipse((col1*2 + col2) / 3, 410, 145.01, 145.01);
+  ellipse((col3*2 + col2) / 3, 410, 145.01, 145.01);
+  rect(col2, 410, ((col3*2 + col2) / 3) - ((col1*2 + col2) / 3) + 6, 145);
+  rectMode(CORNER);
+  strokeWeight(3);*/
+  // i don't like the rounded rectangle window
+
+  /*  colorMode(RGB, 255, 255, 255);
+    let tempColor = color(r, g, b);
+    aH = round(hue(tempColor));
+    text(round(hue(tempColor)), col2 - 30, 800);
+    aS = round(saturation(tempColor));
+    text(round(saturation(tempColor)), col2, 800);
+    aB = round(brightness(tempColor));
+    text(round(brightness(tempColor)), col2 + 30, 800);
+    colorMode(HSL);*/
+
+
+  // run this when the user switches from intro to explore
+  swatch1 = color(aH, aS, aB);
+  swatch2 = color(0,0,0,0);
+  swatch3 = color(0,0,0,0);
+  swatch4 = color(0,0,0,0);
 }
 
 function suggestionScreen() {
@@ -182,6 +173,10 @@ function suggestionScreen() {
 
 function exploreScreen() {
   // Background
+  rSlider.position(col2, -200);
+  gSlider.position(col2, -200);
+  bSlider.position(col2, -200);
+
   fill(backgroundColor);
   rect(0,0,640,960);
   textFont(roboto);
@@ -222,12 +217,6 @@ function exploreScreen() {
   text('→', midColB + 147, s12H - 2.5);
   text('→', midColB - 17, s34H - 2.5);
   text('→', midColB + 147, s34H - 2.5);
-  strokeWeight(2);
-  fill(50);
-  ellipse(30,30,40,40)
-  strokeWeight(3);
-  fill(textColor);
-  text('↩', 30, 37.5);
   textFont(roboto);
   textSize(16);
   if (alpha(swatch1) != 0) {
@@ -389,37 +378,10 @@ function shadow(column) {
 
 function mouseClicked() {
   if (whatScreen == 0) {
-    // intro screen
-    if (mouseX > col2 - 73.5 && mouseX < col2 + 73.5 && mouseY > 764 - 31 && mouseY < 764 + 31) {
-      // run this when the user switches from intro to explore
-      swatch1 = color(aH, aS, aB);
-      swatch2 = color(0,0,0,0);
-      swatch3 = color(0,0,0,0);
-      swatch4 = color(0,0,0,0);
 
-      hSlider.hide();
-      sSlider.hide();
-      bSlider.hide();
-
-      // jump to second screen
-      whatScreen = 2;
-    }
   } else if (whatScreen == 1) {
 
   } else {
-    if (dist(mouseX, mouseY, 30, 30,) <= 20) {
-      // this code causes the user to keep his/her active color when returning to intro screen.  i realized though that people will probably prefer to return to their original color.
-      //hSlider.value(aH);
-      //sSlider.value(aS);
-      //bSlider.value(aB);
-
-      hSlider.show();
-      sSlider.show();
-      bSlider.show();
-
-      whatScreen = 0;
-    }
-
     // the four Swatches
 
     // the plus signs
