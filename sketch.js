@@ -34,7 +34,7 @@ function setup() {
   createCanvas(640,960);
   colorMode(HSB);
   strokeColor = (0, 0.75);
-  stroke(strokeColor); // the color of the outlines
+  stroke(strokeColor); // the color of the outlines, including the outline on the text.
   textAlign(CENTER);
 
 
