@@ -142,8 +142,8 @@ function introScreen() {
   // copyright nonsense
   strokeWeight(1.8);
   textSize(12);
-  text("© 2019 Nobody.  Content is property of the developers, although I think now it's", col2, 900);
-  text("technically property of the school?  I honestly don't know.  ", col2, 920);
+//   text("© 2019 Nobody.  Content is property of the developers, although I think now it's", col2, 900);
+//   text("technically property of the school?  I honestly don't know.  ", col2, 920);
 
   aH = hSlider.value();
   aS = sSlider.value();
